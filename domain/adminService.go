@@ -33,3 +33,31 @@ func (a *AdminService) CreateAdmin(admin *entity.Admin) error {
 
 	return a.AdminRepo.Create(admin)
 }
+
+// 登陆检查
+func (a *AdminService) CheckAdmin(adminName string, adminPassword string) (*entity.Admin, error) {
+	if adminName == "" {
+		return nil, errors.New("用户名不能为空")
+	}
+
+	if adminPassword == "" {
+		return nil, errors.New("用户密码不能为空")
+	}
+
+	encryptedPassword := util.MD5(adminPassword)
+
+	dbAdmin, err := a.AdminRepo.FindByName(adminName)
+	if err != nil {
+		return nil, errors.New("系统报错")
+	}
+
+	if dbAdmin == nil {
+		return nil, errors.New("没有找到此用户")
+	}
+
+	if dbAdmin.AdminPassword != encryptedPassword {
+		return nil, errors.New("用户密码不正确")
+	}
+
+	return dbAdmin, nil
+}
