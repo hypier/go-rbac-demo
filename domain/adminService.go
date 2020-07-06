@@ -25,7 +25,7 @@ func (a *AdminService) CreateAdmin(admin *entity.Admin) error {
 		return errors.New("用户角色不能为空")
 	}
 
-	if b, err := a.AdminRepo.FindByName(admin.AdminName); b != nil && err == nil {
+	if b, err := a.AdminRepo.FindByName(admin.AdminName); b.AdminId != 0 && err == nil {
 		return errors.New("用户已经存在")
 	}
 

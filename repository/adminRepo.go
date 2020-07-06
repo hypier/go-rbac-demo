@@ -28,7 +28,7 @@ func (a *AdminRepo) FindByName(adminName string) (admin *entity.Admin, err error
 	}
 
 	for res.Next() {
-		err := res.Scan(&dbAdmin.AdminId, &dbAdmin.AdminPassword, &dbAdmin.AdminId)
+		err := res.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &dbAdmin.RoleCode)
 		if err != nil {
 			return nil, err
 		}

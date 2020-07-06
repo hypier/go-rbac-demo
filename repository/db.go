@@ -3,14 +3,15 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
-	userName  string = "chenkai"
-	password  string = "chenkai"
-	ipAddress string = "192.168.0.115"
+	userName  string = "root"
+	password  string = "sincen10070218"
+	ipAddress string = "localhost"
 	port      int    = 3306
-	dbName    string = "test"
+	dbName    string = "db_admin"
 	charset   string = "utf8"
 )
 
