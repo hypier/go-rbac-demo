@@ -28,9 +28,9 @@ func (a *AdminController) PostRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	adminName := r.FormValue("adminName")
-	adminPassword := r.FormValue("adminPassword")
-	roleCode := r.FormValue("roleCode")
+	adminName := r.FormValue("name")
+	adminPassword := r.FormValue("password")
+	roleCode := r.FormValue("role")
 
 	if adminName == "" || adminPassword == "" || roleCode == "" {
 		OutputJson(w, 0, "参数错误", nil)
@@ -48,7 +48,35 @@ func (a *AdminController) PostRegister(w http.ResponseWriter, r *http.Request) {
 	} else {
 		OutputJson(w, 1, "ok", admin)
 	}
+}
 
+// 管理员登陆
+func (a *AdminController) PostLogin(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("content-type", "application/json")
+
+	if err := r.ParseForm(); err != nil {
+		OutputJson(w, 0, err.Error(), nil)
+		return
+	}
+
+	adminName := r.FormValue("name")
+	adminPassword := r.FormValue("password")
+
+	if adminName == "" || adminPassword == "" {
+		OutputJson(w, 0, "参数错误", nil)
+		return
+	}
+
+	admin, err := a.AdminService.CheckAdmin(adminName, adminPassword)
+	if err != nil {
+		OutputJson(w, 0, err.Error(), nil)
+		return
+	}
+
+	addCookie("admin_name", admin.AdminName, w)
+
+	OutputJson(w, 1, "登陆成功", admin.AdminName)
 }
 
 func OutputJson(w http.ResponseWriter, ret int, reason string, i interface{}) {
@@ -58,4 +86,11 @@ func OutputJson(w http.ResponseWriter, ret int, reason string, i interface{}) {
 		return
 	}
 	_, _ = w.Write(b)
+}
+
+// 存入cookie,使用cookie存储
+func addCookie(name string, value string, w http.ResponseWriter) {
+
+	cookie := http.Cookie{Name: name, Value: value, Path: "/"}
+	http.SetCookie(w, &cookie)
 }

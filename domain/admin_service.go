@@ -56,7 +56,7 @@ func (a *AdminService) CheckAdmin(adminName string, adminPassword string) (*enti
 		return nil, errors.New("系统报错")
 	}
 
-	if dbAdmin == nil {
+	if dbAdmin == nil || dbAdmin.AdminId == 0 {
 		return nil, errors.New("没有找到此用户")
 	}
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go-rbac-demo/controller"
 	"go-rbac-demo/domain"
 	"go-rbac-demo/repository"
@@ -14,12 +13,7 @@ func main() {
 	adminService := &domain.AdminService{AdminRepo: adminRepo}
 	adminCtrl := &controller.AdminController{AdminService: adminService}
 
-	http.HandleFunc("/admin/", adminCtrl.PostRegister)
-	http.HandleFunc("/admin1/", Post)
+	http.HandleFunc("/admin", adminCtrl.PostRegister)
+	http.HandleFunc("/login", adminCtrl.PostLogin)
 	http.ListenAndServe(":8888", nil)
-}
-
-func Post(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Method)
-	w.Write([]byte(r.Method))
 }
