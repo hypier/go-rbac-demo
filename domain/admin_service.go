@@ -31,7 +31,11 @@ func (a *AdminService) CreateAdmin(admin *entity.Admin) error {
 
 	admin.AdminPassword = util.MD5(admin.AdminPassword)
 
-	return a.AdminRepo.Create(admin)
+	if a.AdminRepo.Create(admin) {
+		return nil
+	} else {
+		return errors.New("系统错误")
+	}
 }
 
 // 登陆检查
