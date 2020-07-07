@@ -46,7 +46,7 @@ func (a *AdminController) PostRegister(w http.ResponseWriter, r *http.Request) {
 	if err := a.AdminService.CreateAdmin(admin); err != nil {
 		OutputJson(w, 0, err.Error(), nil)
 	} else {
-		OutputJson(w, 1, "ok", admin)
+		OutputJson(w, 1, "注册成功", admin)
 	}
 }
 
@@ -80,7 +80,7 @@ func (a *AdminController) PostLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 // 管理员退出
-func (a *AdminController) PostLogout(w http.ResponseWriter, r *http.Request) {
+func (a *AdminController) GetLogout(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
 	if util.ClearCookie("admin_name", r, w) {
