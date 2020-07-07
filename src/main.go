@@ -10,8 +10,8 @@ import (
 
 func main() {
 
-	adminRepo := &repository.AdminRepo{}
-	adminService := &domain.AdminService{AdminRepo: adminRepo}
+	adminRepository := &repository.AdminRepository{}
+	adminService := &domain.AdminService{AdminRepo: adminRepository}
 	adminCtrl := &controller.AdminController{AdminService: adminService}
 
 	http.HandleFunc("/reg", adminCtrl.PostRegister)

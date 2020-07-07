@@ -8,7 +8,7 @@ import (
 )
 
 type AdminService struct {
-	AdminRepo repository.AdminRepository
+	AdminRepo repository.AdminRepo
 }
 
 // 创建管理员

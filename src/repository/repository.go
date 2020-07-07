@@ -4,14 +4,14 @@ import (
 	"go-rbac-demo/domain/entity"
 )
 
-type AdminRepository interface {
+type AdminRepo interface {
 	FindOne(id int) (admin *entity.Admin, err error)
 	FindByName(adminName string) (admin *entity.Admin, err error)
 	Create(admin *entity.Admin) bool
 	Update(admin *entity.Admin) bool
 }
 
-type RoleRepository interface {
+type RoleRepo interface {
 	FindOne(id int) (role *entity.Role, err error)
 	FindByCode(roleCode string) (role *entity.Role, err error)
 	Create(role *entity.Role) bool

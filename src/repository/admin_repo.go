@@ -5,15 +5,15 @@ import (
 	"go-rbac-demo/domain/entity"
 )
 
-type AdminRepo struct {
+type AdminRepository struct {
 }
 
-func (a *AdminRepo) FindOne(id int) (admin *entity.Admin, err error) {
+func (a *AdminRepository) FindOne(id int) (admin *entity.Admin, err error) {
 
 	panic("implement me")
 }
 
-func (a *AdminRepo) FindByName(adminName string) (admin *entity.Admin, err error) {
+func (a *AdminRepository) FindByName(adminName string) (admin *entity.Admin, err error) {
 	var conn = connectMysql()
 	defer func() {
 		err := conn.Close()
@@ -39,7 +39,7 @@ func (a *AdminRepo) FindByName(adminName string) (admin *entity.Admin, err error
 	return &dbAdmin, nil
 }
 
-func (a *AdminRepo) Create(admin *entity.Admin) bool {
+func (a *AdminRepository) Create(admin *entity.Admin) bool {
 	var conn = connectMysql()
 	defer func() {
 		err := conn.Close()
@@ -65,6 +65,6 @@ func (a *AdminRepo) Create(admin *entity.Admin) bool {
 	}
 }
 
-func (a *AdminRepo) Update(admin *entity.Admin) bool {
+func (a *AdminRepository) Update(admin *entity.Admin) bool {
 	panic("implement me")
 }
