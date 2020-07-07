@@ -48,15 +48,18 @@ curl --location --request POST 'localhost:8888/login' \
 
 ### 3. 管理员查询
 ```
-curl --location --request GET 'localhost:8888/admin'
+curl --location --request GET 'localhost:8888/admin' \
+--header 'Cookie: admin_name=admin' -w %{http_code} 
 ```
 
 ### 4. 普通用户查询
 ```
-curl --location --request GET 'localhost:8888/user'
+curl --location --request GET 'localhost:8888/admin' \
+--header 'Cookie: admin_name=hypier' -w %{http_code} 
 ```
 
 ### 5. 用户退出
 ```
-curl --location --request GET 'localhost:8888/logout'
+curl --location --request GET 'localhost:8888/logout' \
+--header 'Cookie: admin_name=admin' -w %{http_code} 
 ```
