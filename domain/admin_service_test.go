@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"fmt"
 	"go-rbac-demo/domain/entity"
 	"go-rbac-demo/repository"
 	"testing"
@@ -9,12 +8,14 @@ import (
 
 func TestAdminService_CreateAdmin(t *testing.T) {
 
-	admin := &entity.Admin{AdminName: "heyong", AdminPassword: "123456", RoleCode: "Admin"}
+	admin := &entity.Admin{AdminName: "heyong1", AdminPassword: "123456", RoleCode: "Admin"}
 	adminRepo := &repository.AdminRepo{}
 
-	adminService := &AdminService{AdminRepo: adminRepo}
+	adminService := &AdminService{adminRepo}
 
 	if err := adminService.CreateAdmin(admin); err != nil {
-		fmt.Println(admin)
+		t.Error(err.Error())
+	} else {
+		t.Log(admin)
 	}
 }

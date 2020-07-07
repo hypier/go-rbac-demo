@@ -8,7 +8,7 @@ import (
 
 var (
 	userName  string = "root"
-	password  string = "sincen10070218"
+	password  string = "root"
 	ipAddress string = "localhost"
 	port      int    = 3306
 	dbName    string = "db_admin"
@@ -22,4 +22,11 @@ func connectMysql() *sql.DB {
 		fmt.Printf("mysql connect failed, detail is [%v]", err.Error())
 	}
 	return Db
+}
+
+func checkErr(err error) {
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 }

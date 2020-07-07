@@ -5,10 +5,6 @@ import (
 	"go-rbac-demo/domain/entity"
 )
 
-func init() {
-
-}
-
 type AdminRepo struct {
 }
 
@@ -21,21 +17,21 @@ func (a *AdminRepo) FindByName(adminName string) (admin *entity.Admin, err error
 	var conn = connectMysql()
 	defer func() {
 		err := conn.Close()
-		if err != nil {
-			fmt.Println(err)
-		}
+		checkErr(err)
 	}()
 
 	var dbAdmin entity.Admin
 	res, err := conn.Query("select * from admin where admin_name = ? ", adminName)
 
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
 
 	for res.Next() {
 		err := res.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &dbAdmin.RoleCode)
 		if err != nil {
+			fmt.Println(err.Error())
 			return nil, err
 		}
 	}
@@ -47,27 +43,28 @@ func (a *AdminRepo) Create(admin *entity.Admin) bool {
 	var conn = connectMysql()
 	defer func() {
 		err := conn.Close()
-		if err != nil {
-			fmt.Println(err)
-		}
+		checkErr(err)
 	}()
 
-	res, err := conn.Exec("insert into admin(admin_name,admin_password)values(?,?)", admin.AdminName, admin.AdminPassword)
+	res, err := conn.Exec("insert into admin(admin_name,admin_password,role_code)values(?,?,?)",
+		admin.AdminName, admin.AdminPassword, admin.RoleCode)
 
 	if err != nil {
+		fmt.Println(err.Error())
 		return false
 	}
 
 	id, err := res.LastInsertId()
 
-	if err == nil {
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	} else {
 		admin.AdminId = int(id)
 		return true
-	} else {
-		return false
 	}
 }
 
-func (a *AdminRepo) Update(admin *entity.Admin) error {
+func (a *AdminRepo) Update(admin *entity.Admin) bool {
 	panic("implement me")
 }
