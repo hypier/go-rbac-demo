@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+	"go-rbac-demo/custerror"
 	"go-rbac-demo/domain/entity"
 	"go-rbac-demo/repository"
 	"go-rbac-demo/util"
@@ -15,7 +16,7 @@ type AdminService struct {
 func (a *AdminService) CreateAdmin(admin *entity.Admin) error {
 
 	if admin == nil || admin.AdminName == "" {
-		return errors.New("用户名不能为空")
+		return custerror.New("用户名不能为空")
 	}
 
 	if admin.AdminPassword == "" {
