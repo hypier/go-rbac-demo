@@ -21,7 +21,6 @@ type Result struct {
 // 管理员注册
 func (a *AdminController) PostRegister(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Method)
-
 	w.Header().Set("content-type", "application/json")
 
 	if err := r.ParseForm(); err != nil {
