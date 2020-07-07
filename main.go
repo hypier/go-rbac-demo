@@ -13,7 +13,13 @@ func main() {
 	adminService := &domain.AdminService{AdminRepo: adminRepo}
 	adminCtrl := &controller.AdminController{AdminService: adminService}
 
-	http.HandleFunc("/admin", adminCtrl.PostRegister)
+	http.HandleFunc("/reg", adminCtrl.PostRegister)
+
 	http.HandleFunc("/login", adminCtrl.PostLogin)
+	http.HandleFunc("/logout", adminCtrl.PostLogout)
+
+	http.HandleFunc("/admin", adminCtrl.GetAdmin)
+	http.HandleFunc("/user", adminCtrl.GetUser)
+
 	http.ListenAndServe(":8888", nil)
 }

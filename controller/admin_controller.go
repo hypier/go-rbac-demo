@@ -2,9 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"go-rbac-demo/domain"
 	"go-rbac-demo/domain/entity"
+	"go-rbac-demo/util"
 	"net/http"
 )
 
@@ -20,7 +20,7 @@ type Result struct {
 
 // 管理员注册
 func (a *AdminController) PostRegister(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Method)
+
 	w.Header().Set("content-type", "application/json")
 
 	if err := r.ParseForm(); err != nil {
@@ -74,9 +74,70 @@ func (a *AdminController) PostLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	addCookie("admin_name", admin.AdminName, w)
+	util.AddCookie("admin_name", admin.AdminName, w)
 
 	OutputJson(w, 1, "登陆成功", admin.AdminName)
+}
+
+// 管理员退出
+func (a *AdminController) PostLogout(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	if util.ClearCookie("admin_name", r, w) {
+		OutputJson(w, 1, "退出成功", nil)
+	} else {
+		// 返回状态码
+		w.WriteHeader(401)
+		return
+	}
+
+}
+
+// 管理员页面
+func (a *AdminController) GetAdmin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	admin, ok := a.auth(w, r)
+	if !ok {
+		return
+	}
+
+	if admin.RoleCode == "Admin" {
+		OutputJson(w, 1, "ok", admin)
+	} else {
+		w.WriteHeader(403)
+	}
+
+}
+
+// 普通页面
+func (a *AdminController) GetUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	if admin, ok := a.auth(w, r); !ok {
+		return
+	} else {
+		OutputJson(w, 1, "ok", admin)
+	}
+}
+
+// 登陆验证
+func (a *AdminController) auth(w http.ResponseWriter, r *http.Request) (*entity.Admin, bool) {
+	adminName, err := util.GetCookie("admin_name", r)
+	if err != nil {
+		// 返回状态码
+		w.WriteHeader(401)
+		return nil, false
+	}
+
+	admin, err := a.AdminService.GetAdmin(adminName)
+	if err != nil {
+		// 返回错误
+		w.WriteHeader(401)
+		return nil, false
+	}
+
+	return admin, true
 }
 
 func OutputJson(w http.ResponseWriter, ret int, reason string, i interface{}) {
@@ -86,11 +147,4 @@ func OutputJson(w http.ResponseWriter, ret int, reason string, i interface{}) {
 		return
 	}
 	_, _ = w.Write(b)
-}
-
-// 存入cookie,使用cookie存储
-func addCookie(name string, value string, w http.ResponseWriter) {
-
-	cookie := http.Cookie{Name: name, Value: value, Path: "/"}
-	http.SetCookie(w, &cookie)
 }

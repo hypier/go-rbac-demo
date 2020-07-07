@@ -66,3 +66,12 @@ func (a *AdminService) CheckAdmin(adminName string, adminPassword string) (*enti
 
 	return dbAdmin, nil
 }
+
+// 管理员查询
+func (a *AdminService) GetAdmin(adminName string) (*entity.Admin, error) {
+	if adminName == "" {
+		return nil, errors.New("用户名不能为空")
+	}
+
+	return a.AdminRepo.FindByName(adminName)
+}
