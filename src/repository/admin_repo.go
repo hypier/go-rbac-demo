@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"fmt"
 	"go-rbac-demo/domain/entity"
+	"log"
 )
 
 type AdminRepository struct {
@@ -21,19 +21,27 @@ func (a *AdminRepository) FindByName(adminName string) (admin *entity.Admin, err
 	}()
 
 	var dbAdmin entity.Admin
-	res, err := conn.Query("select * from admin where admin_name = ? ", adminName)
+	rows, err := conn.Query("select * from admin where admin_name = ? ", adminName)
 
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Fatal(err)
 		return nil, err
 	}
+	defer func() {
+		err2 := rows.Close()
+		checkErr(err2)
+	}()
 
-	for res.Next() {
-		err := res.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &dbAdmin.RoleCode)
+	for rows.Next() {
+		err := rows.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &dbAdmin.RoleCode)
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Fatal(err)
 			return nil, err
 		}
+	}
+
+	if err = rows.Err(); err != nil {
+		log.Fatal(err)
 	}
 
 	return &dbAdmin, nil
@@ -50,14 +58,14 @@ func (a *AdminRepository) Create(admin *entity.Admin) bool {
 		admin.AdminName, admin.AdminPassword, admin.RoleCode)
 
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Fatal(err)
 		return false
 	}
 
 	id, err := res.LastInsertId()
 
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Fatal(err)
 		return false
 	} else {
 		admin.AdminId = int(id)
