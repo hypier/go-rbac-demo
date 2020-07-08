@@ -13,7 +13,7 @@ type Role struct {
 	RoleName string `json:"role_name"`
 }
 
-func (r Role) Scan(src interface{}) error {
+func (r *Role) Scan(src interface{}) error {
 	b, ok := src.([]uint8)
 
 	if !ok {
