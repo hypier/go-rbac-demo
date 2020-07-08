@@ -9,7 +9,7 @@ import (
 
 var (
 	userName  string = "root"
-	password  string = "root1"
+	password  string = "root"
 	ipAddress string = "localhost"
 	port      int    = 3306
 	dbName    string = "db_admin"

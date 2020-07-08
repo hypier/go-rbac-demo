@@ -15,8 +15,19 @@ import (
 */
 type customerError struct {
 	msg  string
+	err  error
 	when time.Time
 	*stack
+}
+
+func (c *customerError) Unwrap() error {
+	return c.err
+}
+
+func Errorf(format string, a ...interface{}) error {
+	format = format + " => %w"
+	err := fmt.Errorf(format, a...)
+	return NewError(err)
 }
 
 // 获取error的信息
@@ -59,7 +70,8 @@ func NewError(err error) error {
 		return nil
 	}
 
-	return New(err.Error())
+	return &customerError{msg: err.Error(), when: time.Now(), stack: callers()}
+
 }
 
 func (c *customerError) stackTrace(state fmt.State, verb rune) {
