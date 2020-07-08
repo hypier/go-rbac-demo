@@ -35,7 +35,7 @@ func (a *AdminRepository) FindByName(adminName string) (admin *entity.Admin, err
 	}()
 
 	for rows.Next() {
-		if err := rows.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &dbAdmin.RoleCode); err != nil {
+		if err := rows.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &dbAdmin.RoleCode, &dbAdmin.Role); err != nil {
 			return nil, custerror.NewError(err)
 		}
 	}
@@ -49,8 +49,8 @@ func (a *AdminRepository) FindByName(adminName string) (admin *entity.Admin, err
 
 func (a *AdminRepository) Create(admin *entity.Admin) error {
 
-	res, err := conn.Exec("insert into admin(admin_name,admin_password,role_code)values(?,?,?)",
-		admin.AdminName, admin.AdminPassword, admin.RoleCode)
+	res, err := conn.Exec("insert into admin(admin_name,admin_password,role_code,role)values(?,?,?,?)",
+		admin.AdminName, admin.AdminPassword, admin.RoleCode, admin.Role)
 
 	if err != nil {
 		return custerror.NewError(err)

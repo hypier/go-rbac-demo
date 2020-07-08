@@ -6,4 +6,5 @@ type Admin struct {
 	AdminName     string
 	AdminPassword string
 	RoleCode      string
+	Role          *Role
 }

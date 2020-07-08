@@ -9,7 +9,7 @@ import (
 
 func TestAdminService_CreateAdmin(t *testing.T) {
 
-	admin := &entity.Admin{AdminName: "heyong7p", AdminPassword: "123456", RoleCode: "Admin"}
+	admin := &entity.Admin{AdminName: "heyong7p1", AdminPassword: "123456", RoleCode: "Admin"}
 	adminRepo := &repository.AdminRepository{}
 
 	adminService := &AdminService{adminRepo}
