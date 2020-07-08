@@ -2,13 +2,18 @@ package repository
 
 import (
 	"fmt"
+	"go-rbac-demo/custerror"
 	"go-rbac-demo/domain/entity"
 	"testing"
 )
 
 func TestAdminRepository_FindByName(t *testing.T) {
 	adminRepo := &AdminRepository{}
-	name, _ := adminRepo.FindByName("heyong7p21")
+	name, err := adminRepo.FindByName("heyong7p21")
+
+	if err != nil {
+		custerror.PrintError(err)
+	}
 
 	fmt.Println(name)
 }

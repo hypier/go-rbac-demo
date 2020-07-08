@@ -34,10 +34,14 @@ func (a *AdminRepository) FindByName(adminName string) (admin *entity.Admin, err
 		custerror.PrintError(err2)
 	}()
 
+	var roleCode sql.NullString
+
 	for rows.Next() {
-		if err := rows.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &dbAdmin.RoleCode, &dbAdmin.Role); err != nil {
+		if err := rows.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &roleCode, &dbAdmin.Role); err != nil {
 			return nil, custerror.NewError(err)
 		}
+
+		dbAdmin.RoleCode = roleCode.String
 	}
 
 	if err = rows.Err(); err != nil {
