@@ -7,13 +7,13 @@ import (
 type AdminRepo interface {
 	FindOne(id int) (admin *entity.Admin, err error)
 	FindByName(adminName string) (admin *entity.Admin, err error)
-	Create(admin *entity.Admin) bool
-	Update(admin *entity.Admin) bool
+	Create(admin *entity.Admin) error
+	Update(admin *entity.Admin) error
 }
 
 type RoleRepo interface {
 	FindOne(id int) (role *entity.Role, err error)
 	FindByCode(roleCode string) (role *entity.Role, err error)
-	Create(role *entity.Role) bool
-	Update(role *entity.Role) bool
+	Create(role *entity.Role) error
+	Update(role *entity.Role) error
 }

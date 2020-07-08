@@ -27,17 +27,13 @@ func (a *AdminService) CreateAdmin(admin *entity.Admin) error {
 		return errors.New("用户角色不能为空")
 	}
 
-	if b, err := a.AdminRepo.FindByName(admin.AdminName); err == nil && b.AdminId != 0 {
-		return errors.New("用户已经存在")
-	}
+	//if b, err := a.AdminRepo.FindByName(admin.AdminName); err == nil && b.AdminId != 0 {
+	//	return errors.New("用户已经存在")
+	//}
 
 	admin.AdminPassword = util.MD5(admin.AdminPassword)
 
-	if a.AdminRepo.Create(admin) {
-		return nil
-	} else {
-		return errors.New("系统错误")
-	}
+	return a.AdminRepo.Create(admin)
 }
 
 // 登陆检查

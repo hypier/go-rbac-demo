@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"go-rbac-demo/custerror"
 	"go-rbac-demo/domain/entity"
 	"log"
 )
@@ -47,7 +48,7 @@ func (a *AdminRepository) FindByName(adminName string) (admin *entity.Admin, err
 	return &dbAdmin, nil
 }
 
-func (a *AdminRepository) Create(admin *entity.Admin) bool {
+func (a *AdminRepository) Create(admin *entity.Admin) error {
 	var conn = connectMysql()
 	defer func() {
 		err := conn.Close()
@@ -58,21 +59,21 @@ func (a *AdminRepository) Create(admin *entity.Admin) bool {
 		admin.AdminName, admin.AdminPassword, admin.RoleCode)
 
 	if err != nil {
-		log.Fatal(err)
-		return false
+		//log.Fatal(err)
+		return custerror.NewError(err)
 	}
 
 	id, err := res.LastInsertId()
 
 	if err != nil {
 		log.Fatal(err)
-		return false
+		return err
 	} else {
 		admin.AdminId = int(id)
-		return true
+		return nil
 	}
 }
 
-func (a *AdminRepository) Update(admin *entity.Admin) bool {
+func (a *AdminRepository) Update(admin *entity.Admin) error {
 	panic("implement me")
 }
