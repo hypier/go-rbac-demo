@@ -25,7 +25,7 @@ func (c *customerError) Unwrap() error {
 }
 
 func Errorf(format string, a ...interface{}) error {
-	format = format + " => %w"
+	format = format + " %w"
 	err := fmt.Errorf(format, a...)
 	return NewError(err)
 }

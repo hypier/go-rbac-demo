@@ -22,4 +22,13 @@ func TestNew(t *testing.T) {
 
 	fmt.Printf("%q", err4)
 	fmt.Println()
+
+	if errors.Is(err4, err3) {
+		fmt.Println("Yes")
+	} else {
+		fmt.Println("No")
+	}
+
+	fmt.Println()
+
 }
