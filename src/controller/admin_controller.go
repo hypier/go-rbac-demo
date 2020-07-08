@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"go-rbac-demo/custerror"
 	"go-rbac-demo/domain"
 	"go-rbac-demo/domain/entity"
 	"go-rbac-demo/util"
@@ -44,6 +45,7 @@ func (a *AdminController) PostRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := a.AdminService.CreateAdmin(admin); err != nil {
+		custerror.PrintError(err)
 		OutputJson(w, 0, err.Error(), nil)
 	} else {
 		OutputJson(w, 1, "注册成功", admin)

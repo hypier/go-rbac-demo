@@ -3,7 +3,6 @@ package repository
 import (
 	"go-rbac-demo/custerror"
 	"go-rbac-demo/domain/entity"
-	"log"
 )
 
 type AdminRepository struct {
@@ -15,59 +14,59 @@ func (a *AdminRepository) FindOne(id int) (admin *entity.Admin, err error) {
 }
 
 func (a *AdminRepository) FindByName(adminName string) (admin *entity.Admin, err error) {
-	var conn = connectMysql()
+	conn, err := connectMysql()
+	if err != nil {
+		return nil, err
+	}
 	defer func() {
 		err := conn.Close()
-		checkErr(err)
+		custerror.PrintError(err)
 	}()
 
 	var dbAdmin entity.Admin
 	rows, err := conn.Query("select * from admin where admin_name = ? ", adminName)
 
 	if err != nil {
-		log.Fatal(err)
-		return nil, err
+		return nil, custerror.NewError(err)
 	}
+
 	defer func() {
 		err2 := rows.Close()
-		checkErr(err2)
+		custerror.PrintError(err2)
 	}()
 
 	for rows.Next() {
-		err := rows.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &dbAdmin.RoleCode)
-		if err != nil {
-			log.Fatal(err)
-			return nil, err
+		if err := rows.Scan(&dbAdmin.AdminId, &dbAdmin.AdminName, &dbAdmin.AdminPassword, &dbAdmin.RoleCode); err != nil {
+			return nil, custerror.NewError(err)
 		}
 	}
 
 	if err = rows.Err(); err != nil {
-		log.Fatal(err)
+		return nil, custerror.NewError(err)
 	}
 
 	return &dbAdmin, nil
 }
 
 func (a *AdminRepository) Create(admin *entity.Admin) error {
-	var conn = connectMysql()
+	conn, err := connectMysql()
+	if err != nil {
+		return err
+	}
 	defer func() {
 		err := conn.Close()
-		checkErr(err)
+		custerror.PrintError(err)
 	}()
 
 	res, err := conn.Exec("insert into admin(admin_name,admin_password,role_code)values(?,?,?)",
 		admin.AdminName, admin.AdminPassword, admin.RoleCode)
 
 	if err != nil {
-		//log.Fatal(err)
 		return custerror.NewError(err)
 	}
 
-	id, err := res.LastInsertId()
-
-	if err != nil {
-		log.Fatal(err)
-		return err
+	if id, err := res.LastInsertId(); err != nil {
+		return custerror.NewError(err)
 	} else {
 		admin.AdminId = int(id)
 		return nil

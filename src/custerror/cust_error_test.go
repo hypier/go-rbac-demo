@@ -8,7 +8,7 @@ import (
 func TestNew(t *testing.T) {
 	var err = New("abc")
 
-	fmt.Printf("%+v", err)
+	PrintError(err)
 
 	fmt.Println()
 }

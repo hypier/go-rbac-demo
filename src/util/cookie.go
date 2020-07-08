@@ -1,6 +1,9 @@
 package util
 
-import "net/http"
+import (
+	"go-rbac-demo/custerror"
+	"net/http"
+)
 
 // 存入cookie,使用cookie存储
 func AddCookie(name string, value string, w http.ResponseWriter) {
@@ -14,7 +17,7 @@ func GetCookie(name string, r *http.Request) (string, error) {
 	cookie, err := r.Cookie(name)
 
 	if err != nil || cookie.Value == "" {
-		return "", err
+		return "", custerror.NewError(err)
 	} else {
 		return cookie.Value, nil
 	}

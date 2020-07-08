@@ -24,6 +24,15 @@ func (c *customerError) Error() string {
 	return c.msg
 }
 
+func PrintError(err error) {
+	if err == nil {
+		return
+	}
+
+	fmt.Printf("%+v", err)
+	fmt.Println()
+}
+
 func (c *customerError) Format(state fmt.State, verb rune) {
 	switch verb {
 	case 'v':
@@ -46,6 +55,10 @@ func New(msg string) error {
 }
 
 func NewError(err error) error {
+	if err == nil {
+		return nil
+	}
+
 	return New(err.Error())
 }
 
