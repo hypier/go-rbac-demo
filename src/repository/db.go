@@ -19,7 +19,14 @@ var (
 func connectMysql() (*sql.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s", userName, password, ipAddress, port, dbName, charset)
 	conn, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, custerror.NewError(err)
+	}
 
-	return conn, custerror.NewError(err)
+	conn.SetMaxOpenConns(10)
+	conn.SetMaxIdleConns(3)
+	_ = conn.Ping()
+
+	return conn, nil
 
 }

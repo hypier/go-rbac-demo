@@ -1,9 +1,16 @@
 package repository
 
 import (
+	"database/sql"
 	"go-rbac-demo/custerror"
 	"go-rbac-demo/domain/entity"
 )
+
+var conn *sql.DB
+
+func init() {
+	conn, _ = connectMysql()
+}
 
 type AdminRepository struct {
 }
@@ -14,14 +21,6 @@ func (a *AdminRepository) FindOne(id int) (admin *entity.Admin, err error) {
 }
 
 func (a *AdminRepository) FindByName(adminName string) (admin *entity.Admin, err error) {
-	conn, err := connectMysql()
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		err := conn.Close()
-		custerror.PrintError(err)
-	}()
 
 	var dbAdmin entity.Admin
 	rows, err := conn.Query("select * from admin where admin_name = ? ", adminName)
@@ -49,14 +48,6 @@ func (a *AdminRepository) FindByName(adminName string) (admin *entity.Admin, err
 }
 
 func (a *AdminRepository) Create(admin *entity.Admin) error {
-	conn, err := connectMysql()
-	if err != nil {
-		return err
-	}
-	defer func() {
-		err := conn.Close()
-		custerror.PrintError(err)
-	}()
 
 	res, err := conn.Exec("insert into admin(admin_name,admin_password,role_code)values(?,?,?)",
 		admin.AdminName, admin.AdminPassword, admin.RoleCode)
